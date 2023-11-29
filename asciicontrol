@@ -24,15 +24,17 @@ module ascii_test(
     wire ascii_bit_now;
     reg [6:0]offset1,offset2,offset3;
     reg [6:0] num1,num2,num3;
+    reg [11:0] num_arr[5:0];
     initial begin
-    offset1= 7'b000_0000;
+    offset1= 7'b000_0000;   //위치 바꾸는거
     offset2= 7'b000_0001;
     offset3= 7'b000_0010;
-    num1 =  7'b000_0010;
+    num1 =  7'b000_0010;    //숫자 값 바꾸는거 
     num2 =  7'b000_0100;
     num3 =  7'b000_0001;
+ 
     end
-    
+   
     
     // instantiate ASCII ROM
     ascii_rom rom1(.clk(clk), .addr(rom_addr), .data(rom_data1),.offset(offset1),.num(num1));
@@ -44,9 +46,12 @@ module ascii_test(
     assign ascii_bit1 = rom_data1[~bit_addr];     // reverse bit order
     assign ascii_bit2 = rom_data2[~bit_addr];     // reverse bit order
     assign ascii_bit3 = rom_data3[~bit_addr];     // reverse bit order
+    
     assign ascii_bit_now = (ascii_char == 7'b011_0000)?ascii_bit1:
                         (ascii_char == 7'b011_0001)?ascii_bit2 : 
-                        (ascii_char == 7'b011_0010)?ascii_bit3 :1'b0;
+                       (ascii_char == 7'b011_0010)?ascii_bit3 :1'b0;
+        
+         
    // assign ascii_bit3 = (ascii_char == 7'b011_1000)?ascii_bit:1'b0;
     //assign ascii_bit4 = (ascii_char == 7'b011_1001)?ascii_bit:1'b0;
         
@@ -63,7 +68,7 @@ module ascii_test(
             rgb = 12'h000;      // blank
         else
             if(ascii_bit_on1)
-                rgb = 12'hF00;  // blue letters
+                rgb = 12'h0F0;  // blue letters
             else
                 rgb = 12'hFFF;  // white background
    
