@@ -1,0 +1,44 @@
+`timescale 1ns / 1ps
+`define nettype none
+module controller(
+    input wire clk,rst,
+    input wire [11:0] input_number,
+    input turn,
+    output  reg [11:0]g_num1,g_num2,num_p1,num_p2
+    );
+    localparam [2:0] S0 = 3'd0, S1 = 3'd1, S2 = 3'd2, S3 = 3'd3,S4 = 3'd4, S5 = 3'd5, S6 = 3'd6;
+     reg [2:0] state, next_state;
+     reg [11:0] num_p1, num_p2;
+     always@(posedge clk)
+        if(rst)
+            state <= S0;
+         else 
+            state <= next_state;
+            
+      always@*
+        case(state)
+            S0: if(turn) begin
+                    num_p1[11:0] = input_number[11:0];
+                    next_state <= S1;
+                    end
+                    
+            S1: if(turn) begin 
+                    num_p2[11:0] = input_number[11:0];
+                    next_state <= S2;       
+                    end
+            S2: if(turn) begin 
+                    g_num1[11:0] = input_number[11:0];
+                    if(success == 1)
+                        next_state <= S4;  
+                    else      
+                        next_state <= S3;
+                    end
+             S3: if(turn) begin 
+                    g_num2[11:0] = input_number[11:0];
+                    if(success == 1)
+                        next_state <= S4; 
+                    else 
+                        next_state <= S2;
+                    end  
+              default: begin next_state <= S4;   
+endmodule
