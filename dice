@@ -1,0 +1,18 @@
+module controller (input wire clk, rst, roll, D6, D7, D11, eq,
+        output wire win, lose, inc, loadP);
+        
+localparam [2:0] S0 = 3'd0, S1 = 3'd1, S2 = 3'd2,
+                 S3 = 3'd3, S4 = 3'd4, S5 = 3'd5;
+reg [2:0] state, next_st;
+
+always  @(posedge clk)
+    if(rst)
+        state <= S0;
+    else
+        state <= next_st;
+        
+always @*
+    case (state)
+    S0: if(roll == 0) next_st = S0; else next_st = S1;
+    S1: if(roll) next_st = S1;
+        else if(D7|D11) next_st = S2; //win
